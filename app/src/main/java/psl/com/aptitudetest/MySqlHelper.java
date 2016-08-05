@@ -17,7 +17,7 @@ public class MySqlHelper extends SQLiteOpenHelper {
     public  static final String Column_opt3 ="opt3";
     public  static final String Column_opt4 ="opt4";
     public  static final String Column_correctAns ="correctAns";
-    private static final String CREATE_STATEMENT= "create table "+ TABLE_NAME + "(" +Column_ID+" integer primary key autoincrement,"+ Column_question +" text not null,"+Column_opt1+" text not null,"+Column_opt2+" text not null,"+Column_opt3+" text not null,"+Column_opt4+" text not null,"+Column_correctAns+" text not null);";
+    private static final String CREATE_STATEMENT= "create table "+ TABLE_NAME + "(" +Column_ID+" integer primary key ,"+ Column_question +" text not null,"+Column_opt1+" text not null,"+Column_opt2+" text not null,"+Column_opt3+" text not null,"+Column_opt4+" text not null,"+Column_correctAns+" text not null);";
     private static final String DATABASE_NAME = "questions.db";
     private static final int DATABASE_VERSION = 1;
 

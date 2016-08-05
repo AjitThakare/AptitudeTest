@@ -14,5 +14,11 @@
     <color name="grey05">#ACA899</color>
     <color name="white1">#FFFFFF</color>
     <color name="white2">#DDDDDD</color>
+    <color name="primary">#61298b</color>
+    <color name="primary_dark">#3e2377</color>
+    <color name="accent">#f6c9ff</color>
+
+
+
 
 </resources>

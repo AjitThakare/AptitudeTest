@@ -1,8 +1,41 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+   <!-- @android:style/Theme.Material (dark version)
+
+    @android:style/Theme.Material.Light (light version)
+
+    @android:style/Theme.Material.Light.DarkActionBar
+    -->
+    <style name="MyEditedTheme" parent="android:Theme.Material">
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/accent</item>
+
+    </style>
+    <style name="CodeFont" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#c91d9e</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+    <style name="Button" parent="android:Theme.Black">
+        <item name="android:layout_width"> wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+     </style>
+
+
+
+    <style name="MyTheme" parent="android:Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:listViewStyle">@style/MyListView</item>
     </style>
 
+    <style name="MyListView" parent="@android:style/Widget.ListView">
+        <item name="android:listSelector">@drawable/ic_home</item>
+    </style>
 </resources>

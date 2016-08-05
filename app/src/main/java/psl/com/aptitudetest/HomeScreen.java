@@ -32,8 +32,8 @@ DBManager dbm;
                 requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_ASK_PERMISSIONS);
                 return;
             }
-            dbm.insertDB();                   //insets DB from DBManager class
-          //  dbm.deleteAllQuestions();        //to Reset the DB
+          //dbm.insertDB();                   //insets DB from DBManager class
+         //   dbm.deleteAllQuestions();        //to Reset the DB
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +58,7 @@ public void addListner(){
             }
                 else {
                 Toast.makeText(HomeScreen.this,"Toast is :"+question.getText(),Toast.LENGTH_SHORT).show();
-                dbm.addQuestion(question.getText().toString(), opt1.getText().toString(), opt2.getText().toString(), opt3.getText().toString(), opt4.getText().toString(), correctAnswer.getText().toString());
+             //   dbm.addQuestion(getlatestQusId(),question.getText().toString(), opt1.getText().toString(), opt2.getText().toString(), opt3.getText().toString(), opt4.getText().toString(), correctAnswer.getText().toString());
                 question.setText("");
                 opt1.setText("");
                 opt2.setText("");

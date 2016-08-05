@@ -32,9 +32,10 @@ public class DBManager {
     {
       dbHelper.close();
     }
-    public void addQuestion(String ques,String opt1, String opt2,String opt3, String opt4, String correctAns)
+    public void addQuestion(String id,String ques,String opt1, String opt2,String opt3, String opt4, String correctAns)
     {
         ContentValues values= new ContentValues();
+        values.put(MySqlHelper.Column_ID,id);
         values.put(MySqlHelper.Column_question,ques);
         values.put(MySqlHelper.Column_opt1,opt1);
         values.put(MySqlHelper.Column_opt2,opt2);
@@ -51,7 +52,7 @@ public void deleteAllQuestions()
     database.execSQL(MySqlHelper.DELETE_DATABASE);
 }
     public void insertDB()
-    {
+    {String id=null;
         String ques=null;
         String opt1=null;
         String opt2=null;
@@ -87,15 +88,15 @@ public void deleteAllQuestions()
         Log.d(TAG,"Questions array "+questionsArray.toString());
 
         for(int i=0;i<questionsArray.length;i++)
-        {
-            ques=questionsArray[i][0];
-            opt1=questionsArray[i][1];
-            opt2=questionsArray[i][2];
-            opt3=questionsArray[i][3];
-            opt4=questionsArray[i][4];
-            correctAns=questionsArray[i][5];
+        {   id=questionsArray[i][0];
+            ques=questionsArray[i][1];
+            opt1=questionsArray[i][2];
+            opt2=questionsArray[i][3];
+            opt3=questionsArray[i][4];
+            opt4=questionsArray[i][5];
+            correctAns=questionsArray[i][6];
 
-            addQuestion(ques,opt1,opt2,opt3,opt4,correctAns);
+            addQuestion(id,ques,opt1,opt2,opt3,opt4,correctAns);
         }
 Log.i(TAG,"Question from file are successFully saved in DB");
     }

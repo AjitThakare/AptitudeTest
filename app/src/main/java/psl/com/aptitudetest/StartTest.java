@@ -14,6 +14,7 @@ import java.util.List;
 
 public class StartTest extends Activity implements View.OnClickListener{
     private static String TAG = StartTest.class.getCanonicalName();
+    private static int currentQuestion=0;
     DBManager dbm;
     Button opt1;
     Button opt2;
@@ -23,7 +24,6 @@ public class StartTest extends Activity implements View.OnClickListener{
     Button nxt;
     TextView quest;
     int correctAns=0;
-    private static int currentQuestion=0;
     List<QuestionPO> allQuestions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,19 @@ dbm= new DBManager(this);
     public void startTheTest()
     {
          allQuestions= dbm.getAllQuestions();
-        displayQuestion(allQuestions.get(currentQuestion));
-    prev.setOnClickListener(this);
-        nxt.setOnClickListener(this);
-        opt1.setOnClickListener(this);
-        opt2.setOnClickListener(this);
-        opt3.setOnClickListener(this);
-        opt4.setOnClickListener(this);
-
+        if(allQuestions.size()!=0) {
+            displayQuestion(allQuestions.get(currentQuestion));
+            prev.setOnClickListener(this);
+            nxt.setOnClickListener(this);
+            opt1.setOnClickListener(this);
+            opt2.setOnClickListener(this);
+            opt3.setOnClickListener(this);
+            opt4.setOnClickListener(this);
+        }
+        else
+        {
+            Log.w(TAG,"Database has 0 questions.");
+        }
     }
 public void displayQuestion(QuestionPO question)
 {

@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +17,10 @@ import java.util.List;
  * Created by ajit_thakare on 7/12/2016.
  */
 public class DBManager {
+    private static String TAG = DBManager.class.getCanonicalName();
     private MySqlHelper dbHelper;
     private SQLiteDatabase database;
     private String[] allColumns={MySqlHelper.Column_ID,MySqlHelper.Column_question,MySqlHelper.Column_opt1,MySqlHelper.Column_opt2,MySqlHelper.Column_opt3,MySqlHelper.Column_opt4,MySqlHelper.Column_correctAns};
-    private static String TAG = DBManager.class.getCanonicalName();
     public DBManager(Context context) {
         dbHelper= new MySqlHelper(context); // Why did we do this
     }
@@ -42,7 +45,60 @@ public class DBManager {
         long insertID = database.insert(MySqlHelper.TABLE_NAME,null,values);
         Log.d(TAG,"question Added to DB -"+ques);
     }
+public void deleteAllQuestions()
+{
 
+    database.execSQL(MySqlHelper.DELETE_DATABASE);
+}
+    public void insertDB()
+    {
+        String ques=null;
+        String opt1=null;
+        String opt2=null;
+        String opt3=null;
+        String opt4=null;
+        String correctAns=null;
+
+       String [][]questionsArray={{"1+1=?","1","2","3","4","2"},
+               {"Pune is a _ ?","City","Village","State","Country","1"}
+       ,{"Maharashtra is a _ ?","City","Village","State","Country","3"}
+       };
+
+
+    DataProviderClass dp= new DataProviderClass();
+
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path,"ajit.txt");
+        File input = new File(path,"input.xls");
+        try {
+            // Make sure the Pictures directory exists.
+
+            path.mkdirs();
+
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG,file.getAbsolutePath().toString());
+        questionsArray= dp.getTableArray(input.getAbsolutePath(),"Sheet1","POINTER");
+
+        Log.d(TAG,"input file path is "+input.getAbsolutePath());
+        Log.d(TAG,"Questions array "+questionsArray.toString());
+
+        for(int i=0;i<questionsArray.length;i++)
+        {
+            ques=questionsArray[i][0];
+            opt1=questionsArray[i][1];
+            opt2=questionsArray[i][2];
+            opt3=questionsArray[i][3];
+            opt4=questionsArray[i][4];
+            correctAns=questionsArray[i][5];
+
+            addQuestion(ques,opt1,opt2,opt3,opt4,correctAns);
+        }
+Log.i(TAG,"Question from file are successFully saved in DB");
+    }
     public List<QuestionPO> getAllQuestions()
     {
         List<QuestionPO> listOfQuestions= new ArrayList<QuestionPO>();

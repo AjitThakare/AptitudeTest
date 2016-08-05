@@ -1,7 +1,9 @@
 package psl.com.aptitudetest;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,8 @@ import java.sql.SQLException;
 
 public class HomeScreen extends Activity {
 DBManager dbm;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +26,14 @@ DBManager dbm;
         dbm= new DBManager(this);
         try {
             dbm.open();
+            final int REQUEST_CODE_ASK_PERMISSIONS = 123;
+            int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_ASK_PERMISSIONS);
+                return;
+            }
+            dbm.insertDB();                   //insets DB from DBManager class
+          //  dbm.deleteAllQuestions();        //to Reset the DB
         } catch (SQLException e) {
             e.printStackTrace();
         }

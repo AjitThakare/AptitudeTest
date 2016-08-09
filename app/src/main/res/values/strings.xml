@@ -8,5 +8,6 @@
 <string name="view_questions">Start Test</string>
     <string name="question" >Question</string>
     <string name="correctAnswer">Correct Answer </string>
-
+    <string name="openDrawer">Open Drawer </string>
+    <string name="closeDrawer">Close Drawer </string>
 </resources>

@@ -6,17 +6,24 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="psl.com.aptitudetest.StartTest">
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/timer">
 
-    <TextView
-        android:id="@+id/question"
-        style="@style/CodeFont"
-        android:layout_alignParentStart="true"/>
+        <TextView
+            android:id="@+id/question"
+            style="@style/CodeFont"
+            android:layout_alignParentStart="true"/>
+        </ScrollView>
+
 
     <Button
         android:id="@+id/button1"
         style="@style/Button"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/question"
+        android:layout_below="@+id/scrollView"
         android:layout_marginTop="48dp"
         android:checked="false" />
 
@@ -58,4 +65,21 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/btnPrev"
         android:text="Next" />
+
+    <TextView
+        android:id="@+id/currentQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="1/10"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+       <Chronometer
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+           android:layout_alignEnd="@+id/scrollView"
+           android:layout_alignParentTop="true" />
+
 </RelativeLayout>

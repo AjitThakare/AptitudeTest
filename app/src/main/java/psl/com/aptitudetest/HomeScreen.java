@@ -9,11 +9,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
@@ -21,8 +23,11 @@ import java.sql.SQLException;
 
 public class HomeScreen extends ActionBarActivity {
 DBManager dbm;
-    String TITLES[] = {"Home","Dashboard"};
+    String TITLES[] = {"Formulae","Solved Questions"};
     int ICONS[] = {R.drawable.ic_home,R.drawable.ic_dashboard};
+    String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
+    int [] imgeForTopic={R.drawable.age,R.drawable.area,R.drawable.clock,R.drawable.percentage,R.drawable.profit,R.drawable.train,R.drawable.work};
+    GridView grid;
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
@@ -58,8 +63,30 @@ private   android.support.v7.widget.Toolbar toolbar;
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        final GestureDetector mGestureDetector = new GestureDetector(HomeScreen.this, new GestureDetector.SimpleOnGestureListener() {
 
+            @Override public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
 
+        });
+        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(),motionEvent.getY());
+                if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
+                    Drawer.closeDrawers();
+                    int choice= recyclerView.getChildPosition(child);
+                          drawerClick(choice);
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+            }
+        });
         mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.openDrawer,R.string.closeDrawer){
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -74,44 +101,35 @@ private   android.support.v7.widget.Toolbar toolbar;
                 // Code here will execute once drawer is closed
             }
 
-
-
         }; // Drawer Toggle Object Made
         Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
-
-        addListner();
+        HomescreenGridAdapter gridAdapter= new HomescreenGridAdapter(HomeScreen.this,topics,imgeForTopic);
+        grid=(GridView)findViewById(R.id.gridView);
+        grid.setAdapter(gridAdapter);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Toast.makeText(HomeScreen.this,"Clicked on"+topics[position],Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-public void addListner(){
 
-    Button add= (Button)findViewById(R.id.btnAdd);
-    final EditText question= (EditText)findViewById(R.id.question);
-    final EditText opt1= (EditText)findViewById(R.id.optionOne);
-   final EditText opt2= (EditText)findViewById(R.id.optionTwo);
-    final EditText opt3= (EditText)findViewById(R.id.optionThree);
-    final EditText opt4= (EditText)findViewById(R.id.optionFour);
-    final EditText correctAnswer= (EditText) findViewById(R.id.correctAnswer);
-    add.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-           // Toast.makeText(HomeScreen.this, question.getText(), Toast.LENGTH_SHORT).show();
-            if(question.getText().toString().equals(""))
-            {
-                Toast.makeText(HomeScreen.this,"Please enter question first",Toast.LENGTH_SHORT).show();
-            }
-                else {
-                Toast.makeText(HomeScreen.this,"Toast is :"+question.getText(),Toast.LENGTH_SHORT).show();
-             //   dbm.addQuestion(getlatestQusId(),question.getText().toString(), opt1.getText().toString(), opt2.getText().toString(), opt3.getText().toString(), opt4.getText().toString(), correctAnswer.getText().toString());
-                question.setText("");
-                opt1.setText("");
-                opt2.setText("");
-                opt3.setText("");
-                opt4.setText("");
-                correctAnswer.setText("");
-            }
-                    }
-    });
-}
+    private void drawerClick(int position) { // Drawer click will open new Activty using this method
+        switch (position)
+        {
+            case 1:  Intent intent= new Intent(this,FormulaeDisplay.class);
+                startActivity(intent);
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,6 +147,8 @@ public void addListner(){
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent= new Intent(this,FormulaeDisplay.class);
+            startActivity(intent);
             return true;
         }
         else if(id==R.id.view_questions){
@@ -138,6 +158,7 @@ public void addListner(){
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
 

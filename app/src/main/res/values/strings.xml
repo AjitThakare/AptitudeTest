@@ -5,9 +5,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_start_test">StartTest</string>
-<string name="view_questions">Start Test</string>
-    <string name="question" >Question</string>
+    <string name="view_questions">Start Test</string>
+    <string name="question">Question</string>
     <string name="correctAnswer">Correct Answer </string>
     <string name="openDrawer">Open Drawer </string>
     <string name="closeDrawer">Close Drawer </string>
+    <string name="title_activity_formulae_display">FormulaeDisplay</string>
+
 </resources>

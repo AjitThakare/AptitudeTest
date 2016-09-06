@@ -1,6 +1,7 @@
 package psl.com.aptitudetest;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -23,10 +24,12 @@ import java.sql.SQLException;
 
 public class HomeScreen extends ActionBarActivity {
 DBManager dbm;
-    String TITLES[] = {"Formulae","Solved Questions"};
-    int ICONS[] = {R.drawable.ic_home,R.drawable.ic_dashboard};
-    String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
-    int [] imgeForTopic={R.drawable.age,R.drawable.area,R.drawable.clock,R.drawable.percentage,R.drawable.profit,R.drawable.train,R.drawable.work};
+    //String navDrwerMENU[] = {"Formulae","Solved Questions"};
+    int ICONS[] = {R.drawable.formulae,R.drawable.back,R.drawable.fire,R.drawable.ic_dashboard,R.drawable.fire};
+    //String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
+    String[] topics;
+    String navDrwerMENU[];
+        int [] imgeForTopic={R.drawable.age,R.drawable.area,R.drawable.clock,R.drawable.percentage,R.drawable.profit,R.drawable.train,R.drawable.work};
     GridView grid;
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
@@ -41,6 +44,9 @@ private   android.support.v7.widget.Toolbar toolbar;
         setContentView(R.layout.activity_home_screen);
         toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Context context=getApplicationContext();
+        topics = context.getResources().getStringArray(R.array.topics);
+        navDrwerMENU =context.getResources().getStringArray(R.array.drawer_menu);
         dbm= new DBManager(this);
         try {
             dbm.open();
@@ -58,7 +64,7 @@ private   android.support.v7.widget.Toolbar toolbar;
         Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);        // Drawer object Assigned to the view
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new MyAdapter(TITLES,ICONS,this);
+        mAdapter = new MyAdapter(navDrwerMENU,ICONS,this);
         mRecyclerView.setAdapter(mAdapter);
 
         mLayoutManager = new LinearLayoutManager(this);
@@ -118,8 +124,8 @@ private   android.support.v7.widget.Toolbar toolbar;
     private void drawerClick(int position) { // Drawer click will open new Activty using this method
         switch (position)
         {
-            case 1:  Intent intent= new Intent(this,FormulaeDisplay.class);
-                startActivity(intent);
+            case 1: Intent intent= new Intent(this,FormulaeDisplay.class);
+                    startActivity(intent);
                 break;
             case 2:
                 break;

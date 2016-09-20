@@ -10,8 +10,10 @@ public class QuestionPO {
     String opt3;
     String opt4;
     int correctAns;
+    int questionID;
 
-    public QuestionPO(String question, String opt1, String opt2, String opt3, String opt4, int correctAns) {
+    public QuestionPO(int id,String question, String opt1, String opt2, String opt3, String opt4, int correctAns) {
+        this.questionID=id;
         this.question = question;
         this.opt1 = opt1;
         this.opt2 = opt2;
@@ -21,6 +23,7 @@ public class QuestionPO {
     }
 
     public QuestionPO() {
+        this.questionID=0;
         this.question = null;
         this.opt1 = null;
         this.opt2 = null;
@@ -77,9 +80,18 @@ public class QuestionPO {
         this.correctAns = correctAns;
     }
 
+    public int getQuestionID() {
+        return questionID;
+    }
+
+    public void setQuestionID(int questionID) {
+        this.questionID = questionID;
+    }
+
     @Override
     public String toString() {
         return "QuestionPO{" +
+                "Question ID="+questionID+'\''+
                 "question='" + question + '\'' +
                 ", opt1='" + opt1 + '\'' +
                 ", opt2='" + opt2 + '\'' +

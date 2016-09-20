@@ -10,16 +10,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MySqlHelper extends SQLiteOpenHelper {
     public  static final String TABLE_NAME ="question_table";
     public static final String DELETE_DATABASE="DELETE FROM "+TABLE_NAME;
-    public  static final String Column_ID="_id";
+    public  static final String Column_ID="_id"; // is same as Question ID and is primary key
     public  static final String Column_question ="question";
     public  static final String Column_opt1 ="opt1";
     public  static final String Column_opt2 ="opt2";
     public  static final String Column_opt3 ="opt3";
     public  static final String Column_opt4 ="opt4";
+    public  static final String Column_topic ="topic";
     public  static final String Column_correctAns ="correctAns";
-    private static final String CREATE_STATEMENT= "create table "+ TABLE_NAME + "(" +Column_ID+" integer primary key ,"+ Column_question +" text not null,"+Column_opt1+" text not null,"+Column_opt2+" text not null,"+Column_opt3+" text not null,"+Column_opt4+" text not null,"+Column_correctAns+" text not null);";
+    private static final String CREATE_STATEMENT= "create table "+ TABLE_NAME + "(" +Column_ID+" integer primary key ,"+ Column_question +" text not null,"+Column_opt1+" text not null,"+Column_opt2+" text not null,"+Column_opt3+" text not null,"+Column_opt4+" text not null,"+Column_correctAns+" text not null,"+Column_topic+" text not null);";
     private static final String DATABASE_NAME = "questions.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public MySqlHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

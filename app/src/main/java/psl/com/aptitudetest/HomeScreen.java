@@ -56,7 +56,7 @@ private   android.support.v7.widget.Toolbar toolbar;
                 requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_ASK_PERMISSIONS);
                 return;
             }
-          //dbm.insertDB();                   //insets DB from DBManager class
+           //   dbm.insertDB();                   //insets DB from DBManager class
          //   dbm.deleteAllQuestions();        //to Reset the DB
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,6 +117,10 @@ private   android.support.v7.widget.Toolbar toolbar;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Toast.makeText(HomeScreen.this,"Clicked on"+topics[position],Toast.LENGTH_SHORT).show();
+                // Open new activity from here
+                Intent intent= new Intent(getApplicationContext(),StartTest.class);
+                intent.putExtra("topicName",topics[position]);
+                startActivity(intent);
             }
         });
     }
@@ -124,7 +128,8 @@ private   android.support.v7.widget.Toolbar toolbar;
     private void drawerClick(int position) { // Drawer click will open new Activty using this method
         switch (position)
         {
-            case 1: Intent intent= new Intent(this,FormulaeDisplay.class);
+            case 1: //Intent intent= new Intent(this,FormulaeDisplay.class);
+                Intent intent= new Intent(this,resultGraph.class);
                     startActivity(intent);
                 break;
             case 2:

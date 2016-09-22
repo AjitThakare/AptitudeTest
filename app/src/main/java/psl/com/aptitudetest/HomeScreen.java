@@ -129,7 +129,7 @@ private   android.support.v7.widget.Toolbar toolbar;
         switch (position)
         {
             case 1: //Intent intent= new Intent(this,FormulaeDisplay.class);
-                Intent intent= new Intent(this,resultGraph.class);
+                Intent intent= new Intent(this,FormulaeDisplay.class);
                     startActivity(intent);
                 break;
             case 2:
@@ -158,7 +158,7 @@ private   android.support.v7.widget.Toolbar toolbar;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent= new Intent(this,FormulaeDisplay.class);
+            Intent intent= new Intent(this,topicList.class);
             startActivity(intent);
             return true;
         }

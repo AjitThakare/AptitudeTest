@@ -30,5 +30,6 @@
     </string-array>
 
     <string name="title_activity_result_graph">resultGraph</string>
+    <string name="title_activity_topic_list">topicList</string>
 
 </resources>

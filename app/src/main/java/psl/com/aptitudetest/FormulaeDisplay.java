@@ -5,15 +5,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 public class FormulaeDisplay extends ActionBarActivity {
     ImageButton button;
+    TextView topicName;
+    WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_formulae_display);
+        topicName=(TextView)findViewById(R.id.topicName);
+        webView=(WebView)findViewById(R.id.webview);
       button = (ImageButton)findViewById(R.id.closeButton);
         button.setImageResource(R.drawable.close_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -22,6 +30,18 @@ public class FormulaeDisplay extends ActionBarActivity {
                 finish();
             }
         });
+        Bundle extras=getIntent().getExtras();
+        if(extras!=null)
+        {
+            topicName.setText("Fundamentals of " + extras.get("topic").toString());
+        }
+
+        WebSettings settings= webView.getSettings();
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        webView.loadUrl("file:///android_asset/train.html"); // Load according to Topic
     }
 
 

@@ -3,6 +3,7 @@ package psl.com.aptitudetest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +36,7 @@ public class StartTest extends Activity implements View.OnClickListener{
     Chronometer simpleTimer;
     TextView pagination;
     String testMode="Test";
+    Map resultAnalysis;
     private int currentQuestion=0; // if this is static then test resumes with last attempted question
 
     @Override
@@ -47,7 +48,7 @@ public class StartTest extends Activity implements View.OnClickListener{
 
         if (extras != null) {
             topicName = extras.getString("topicName");
-            Toast.makeText(StartTest.this,"Found in Intent"+topicName,Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(StartTest.this,"Found in Intent"+topicName,Toast.LENGTH_SHORT).show();
         }
 dbm= new DBManager(this);
         try {
@@ -217,6 +218,16 @@ public void displayQuestion(QuestionPO question)
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        checkScore(userAnswers,allQuestions);
+                        Intent intent= new Intent(getApplicationContext(),resultGraph.class);
+                        Bundle extras= new Bundle();
+                        extras.putString("Correct",resultAnalysis.get("Correct").toString());
+                        extras.putString("Incorrect",resultAnalysis.get("Incorrect").toString());
+                        extras.putString("NotAttempted",resultAnalysis.get("NotAttempted").toString());
+
+                        intent.putExtras(extras);
+
+                        startActivity(intent);
                         finish(); // Instead of finishing, show result first..
                     }
 
@@ -224,6 +235,39 @@ public void displayQuestion(QuestionPO question)
                 .setNegativeButton("No", null)
                 .show();
     }
+
+    private void checkScore(Map userAnswers, List<QuestionPO> allQuestions) {
+        int score=0;
+        int correct=0;
+        int notAttempted=0;
+        int attempted=0;
+        int incorrect=0;
+
+        for(int i=0;i<allQuestions.size();i++)
+        {
+            if(userAnswers.containsKey(allQuestions.get(i).getQuestionID()))
+            {
+                attempted++;
+                if(userAnswers.get(allQuestions.get(i).getQuestionID())==(allQuestions.get(i).getCorrectAns()))
+                {
+                    correct++;
+                    Log.d(TAG,"Correct ans found "+allQuestions.get(i).getQuestion());
+                }
+                else
+                {
+                    incorrect++;
+                }
+            }
+        }
+        notAttempted=allQuestions.size()-attempted;
+        score=correct; // No negative marking right now
+        resultAnalysis= new HashMap();
+        resultAnalysis.put("Correct",correct);
+        resultAnalysis.put("Incorrect",incorrect);
+        resultAnalysis.put("NotAttempted",notAttempted);
+
+    }
+
     private void checkIfalreadyAnswered(Map userAnswers, int currentQuestion) {
         int id= allQuestions.get(currentQuestion).getQuestionID();
         if(userAnswers.containsKey(id))

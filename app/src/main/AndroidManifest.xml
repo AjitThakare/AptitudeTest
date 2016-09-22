@@ -39,6 +39,10 @@
             android:name=".resultGraph"
             android:label="@string/title_activity_result_graph" >
         </activity>
+        <activity
+            android:name=".topicList"
+            android:label="@string/title_activity_topic_list" >
+        </activity>
     </application>
 
 </manifest>

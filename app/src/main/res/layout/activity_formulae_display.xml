@@ -3,7 +3,7 @@
     android:layout_height="match_parent" android:orientation="vertical"
     tools:context="psl.com.aptitudetest.FormulaeDisplay">
         <RelativeLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
@@ -24,7 +24,7 @@
         </RelativeLayout>
     <WebView
         android:id="@+id/webview"
-        android:layout_width=""
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
         </WebView>

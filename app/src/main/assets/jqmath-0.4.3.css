@@ -52,7 +52,7 @@ fmath mn[mathvariant*=bold], fmath mtext[mathvariant*=bold], fmath ms[mathvarian
 fmath mn[mathvariant*=italic], fmath mtext[mathvariant*=italic], fmath ms[mathvariant*=italic]
 					{ font-style: italic }
 
-fmath.ma-block		{ display: block; text-align: center; text-indent: 0;
+fmath.ma-block		{ display: block; text-indent: 0;
 						page-break-inside: avoid }
 
 /* note an operator might be 'mo' or "embellished": */

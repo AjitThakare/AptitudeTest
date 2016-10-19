@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class StartTest extends Activity implements View.OnClickListener{
@@ -45,10 +46,19 @@ public class StartTest extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_start_test);
         Bundle extras = getIntent().getExtras();
         String topicName="All";
-
         if (extras != null) {
-            topicName = extras.getString("topicName");
-          //  Toast.makeText(StartTest.this,"Found in Intent"+topicName,Toast.LENGTH_SHORT).show();
+
+            Set set=extras.keySet();
+         if(set.contains("topicName"))
+            {
+                topicName = extras.getString("topicName");
+               // Log.d(TAG,"Topic Name found");
+            }
+            if(set.contains("testmode"))
+            {
+                testMode=extras.getString("testmode");
+                //Log.d(TAG,"Test mode found :"+testMode);
+            }
         }
 dbm= new DBManager(this);
         try {
@@ -328,6 +338,14 @@ public void displayQuestion(QuestionPO question)
                 userAnswers.put(allQuestions.get(currentQuestion).getQuestionID(),4);
                 break;
         }
+            showCorrectAnswer(currentQuestion);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    nxt.callOnClick();
+                }
+            }, 500);
        }
 
         else if(testMode.equalsIgnoreCase("Test")) // solve first, get Result afterwords
@@ -358,6 +376,7 @@ public void displayQuestion(QuestionPO question)
                         userAnswers.put(allQuestions.get(currentQuestion).getQuestionID(),4);
                         break;
                 }
+            checkIfalreadyAnswered(userAnswers,currentQuestion);
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                          @Override
@@ -410,27 +429,58 @@ public void displayQuestion(QuestionPO question)
 
     }
 
-    public void showOptionButtonSelected(int buttonNo)
-    {
-        opt1.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
-        opt2.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
-        opt3.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
-        opt4.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
-        if(buttonNo==1)
+    private void showCorrectAnswer(int currentQuestion) {
+        int ans=allQuestions.get(currentQuestion).getCorrectAns();
+
+        if(ans==1)
         {
-            opt1.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            opt1.setBackground(getResources().getDrawable(R.drawable.button_green_color, null));
         }
-        else if(buttonNo==2)
+        if(ans==2)
         {
-            opt2.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            opt2.setBackground(getResources().getDrawable(R.drawable.button_green_color, null));
         }
-        else if(buttonNo==3)
+        if(ans==3)
         {
-            opt3.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            opt3.setBackground(getResources().getDrawable(R.drawable.button_green_color, null));
         }
-        else if(buttonNo==4)
+        if(ans==4)
         {
-            opt4.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            opt4.setBackground(getResources().getDrawable(R.drawable.button_green_color, null));
+        }
+
+    }
+
+    public void showOptionButtonSelected(int buttonNo) {
+        if (testMode.equalsIgnoreCase("test")) {
+            opt1.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
+            opt2.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
+            opt3.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
+            opt4.setBackground(getResources().getDrawable(R.drawable.button_gray_color, null));
+            if (buttonNo == 1) {
+                opt1.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            } else if (buttonNo == 2) {
+                opt2.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            } else if (buttonNo == 3) {
+                opt3.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            } else if (buttonNo == 4) {
+                opt4.setBackground(getResources().getDrawable(R.drawable.button_lightgray_color, null));
+            }
+        }
+        else if(testMode.equalsIgnoreCase("guess"))
+        {
+
+            if (buttonNo == 1) {
+                opt1.setBackground(getResources().getDrawable(R.drawable.button_red_color, null));
+            } else if (buttonNo == 2) {
+                opt2.setBackground(getResources().getDrawable(R.drawable.button_red_color, null));
+            } else if (buttonNo == 3) {
+                opt3.setBackground(getResources().getDrawable(R.drawable.button_red_color, null));
+            } else if (buttonNo == 4) {
+                opt4.setBackground(getResources().getDrawable(R.drawable.button_red_color, null));
+            }
+            showCorrectAnswer(currentQuestion);
+
         }
     }
     public void resetOptionButtonColor()

@@ -41,6 +41,8 @@ public class FormulaeDisplay extends ActionBarActivity {
         settings.setAllowFileAccessFromFileURLs(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        webView.setHorizontalScrollBarEnabled(false);
+
         webView.loadUrl("file:///android_asset/train.html"); // Load according to Topic, for all topics
     }
 

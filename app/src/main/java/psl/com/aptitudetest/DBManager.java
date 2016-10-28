@@ -52,6 +52,10 @@ public void deleteAllQuestions()
 
     database.execSQL(MySqlHelper.DELETE_DATABASE);
 }
+    public void deleteByQID(String[] qid)
+    {
+        database.delete(MySqlHelper.TABLE_NAME,"_id=?",qid); // db.delete("tablename","id=? and name=?",new String[]{"1","jack"});
+    }
     public void insertDB()
     {String id=null;
         String ques=null;
@@ -100,6 +104,7 @@ public void deleteAllQuestions()
 
             addQuestion(id,ques,opt1,opt2,opt3,opt4,correctAns,topic);
         }
+
 Log.i(TAG,"Question from file are successFully saved in DB");
     }
     public List<QuestionPO> getAllQuestions()
@@ -124,7 +129,19 @@ Log.i(TAG,"Question from file are successFully saved in DB");
         }
 
         return listOfQuestions;
-
+    }
+    public List<Integer> getAllQuestionIDs()
+    {
+        List<Integer> listOfQID= new ArrayList<Integer>();
+        Cursor cursor= database.query(MySqlHelper.TABLE_NAME,allColumns,null,null,null,null,null);
+        cursor.moveToFirst();
+        int i=0;
+        while(!cursor.isAfterLast())
+        {
+                    listOfQID.add(Integer.parseInt(cursor.getString(cursor.getColumnIndex(MySqlHelper.Column_ID))));
+                    cursor.moveToNext();
+        }
+        return listOfQID;
     }
     public List<QuestionPO>getQuestionsByTopic(String topicName)
     {
@@ -163,7 +180,7 @@ Log.i(TAG,"Question from file are successFully saved in DB");
         q.setOpt3(cursor.getString(4));
         q.setOpt4(cursor.getString(5));
         q.setCorrectAns(cursor.getInt(6));
-
+        q.setTopicName(cursor.getString(7));
         return  q;
     }
 }

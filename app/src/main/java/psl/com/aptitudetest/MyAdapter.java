@@ -5,9 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by ajit_thakare on 8/9/2016.
@@ -24,7 +24,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         mNavTitles = Titles;                //have seen earlier
         mIcons = Icons;
         this.context=passedContext;
-
     }
 
     @Override    // from here we can change header view TEXT/ add Image to it.
@@ -87,8 +86,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         int Holderid;
         TextView textView;
         ImageView imageView;
+        ImageButton loginButton;
         Context contxt;
-        public ViewHolder(View itemView,int ViewType, Context c) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
+        public ViewHolder(View itemView,int ViewType, final Context c) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
             super(itemView);
             contxt=c;
             itemView.setClickable(true);
@@ -100,14 +100,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 imageView = (ImageView) itemView.findViewById(R.id.rowIcon);// Creating ImageView object with the id of ImageView from item_row.xml
                 Holderid = 1;                                               // setting holder id as 1 as the object being populated are of type item row
             }
-            else {
+            else { // it is header
                 textView = (TextView) itemView.findViewById(R.id.HEADER);
+                loginButton=(ImageButton)itemView.findViewById(R.id.loginButton); // login button
             }
         }
 
         @Override
         public void onClick(View v) {
-           Toast.makeText(contxt,"Position is"+getPosition(),Toast.LENGTH_SHORT).show();
+          // Toast.makeText(contxt,"Position is"+getPosition(),Toast.LENGTH_SHORT).show();
                        // Based on POsition invoke different intents NOW
         }
     }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 
@@ -14,15 +15,24 @@ public class topicList extends ListActivity {
 public static String TAG=topicList.class.getCanonicalName();
     //ListView list;
     String [] topics;
+    ImageButton button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
+        button = (ImageButton)findViewById(R.id.closeButton);
+        button.setImageResource(R.drawable.close_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         Bundle extras=getIntent().getExtras();
                 if(extras!=null)
                 {
-            Log.d(TAG,"data in intake");
+            Log.d(TAG,"data in intent");
                 }
         else{
                     Log.d(TAG,"no data in intent");

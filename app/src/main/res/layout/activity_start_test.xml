@@ -51,7 +51,7 @@
         android:layout_alignStart="@+id/button2"
         android:layout_alignTop="@+id/button3" />
 
-    <Button
+ <!--   <Button
         android:id="@+id/btnPrev"
         style="@style/Button"
         android:layout_alignParentBottom="true"
@@ -64,7 +64,7 @@
         style="@style/Button"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/btnPrev"
-        android:text="Next" />
+        android:text="Next" /> -->
 
     <TextView
         android:id="@+id/currentQuestionCounter"
@@ -82,4 +82,23 @@
            android:layout_alignEnd="@+id/scrollView"
            android:layout_alignParentTop="true" />
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/timer"
+        android:layout_alignBottom="@+id/timer"
+        android:layout_toStartOf="@+id/timer"
+        android:text="Time Elapsed : "
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+<android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentStart="true"
+    android:layout_toEndOf="@+id/currentQuestionCounter"
+    android:background="@color/primary">
+
+    </android.support.v7.widget.Toolbar>
 </RelativeLayout>

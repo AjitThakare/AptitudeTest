@@ -1,5 +1,6 @@
 package psl.com.aptitudetest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -8,28 +9,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import psl.com.util.URLHelper;
 
 public class Login extends ActionBarActivity {
     private static String TAG = Login.class.getCanonicalName();
 EditText username;
     EditText password;
     Button loginButton;
+    ImageView logo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,32 +42,57 @@ EditText username;
         username= (EditText) findViewById(R.id.username);
         password= (EditText) findViewById(R.id.password);
         loginButton= (Button) findViewById(R.id.login);
+        logo= (ImageView)findViewById(R.id.logo);
+        logo.setImageResource(R.drawable.ic_launcher);
         AppController.getInstance(this); // App controller instantiated !
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              // onlineRequest();
-                registerUser();
-                getAllUsers();
+               login();
+               // registerUser();
+              //  getAllUsers();
             }
         });
     }
 
-    private void onlineRequest() {
+    private void login() {
         String  tag_string_req = "string_req";
-        String url = "http://apti.azurewebsites.net/test/services/users/login/ajit/thakare";
-        StringRequest strReq = new StringRequest(Request.Method.GET,
+        String url = "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/users/login";
+
+        Map<String,String> param= new HashMap<>();
+        param.put("username",username.getText().toString());
+        param.put("password",password.getText().toString());
+
+        URLHelper helper= new URLHelper(url,param);
+        url= helper.addQueryParam();
+        Log.d(TAG,"Ans : "+url);
+
+        final StringRequest strReq = new StringRequest(Request.Method.GET,
                 url, new Response.Listener<String>() {   @Override
             public void onResponse(String response) {
                 Log.d(TAG, response.toString());
 
+            try {
+                JSONObject object= new JSONObject(response);
+                Log.d(TAG, object.get("id").toString());   // use this id to Request all required info of user
+                Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_SHORT).show(); // Store username and write Welcome user
+                   Intent intent = new Intent(getApplicationContext(),HomeScreen.class);
+                startActivity(intent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+        }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-            }
+                Toast.makeText(getApplicationContext(),"Enter correct credentials !",Toast.LENGTH_SHORT).show();
+                username.setText("");
+                password.setText("");
+                           }
         });
 
 // Adding request to request queue
@@ -72,7 +102,7 @@ EditText username;
         // Tag used to cancel the request
         String tag_json_arry = "json_array_req";
 
-        String url = "http://apti.azurewebsites.net/test/services/users";
+        String url = "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/users";
 
         JsonArrayRequest req = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -91,50 +121,11 @@ EditText username;
         AppController.getInstance().addToRequestQueue(req, tag_json_arry);
     }
 
-    private  void registerUser()
-    {
-        String tag_json_obj = "json_obj_req";
-
-        String url = "http://apti.azurewebsites.net/test/services/users";
-
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", "2");
-        params.put("usrName", "amar");
-        params.put("password", "swapnil");
-        params.put("mobileNo", "9879879877");
-        params.put("emailID", "wap@amar.com");
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(url, new JSONObject(params),
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, response.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                NetworkResponse errorRes = error.networkResponse;
-                String stringData = "";
-                if (errorRes != null && errorRes.data != null) {
-                    try {
-                        stringData = new String(errorRes.data, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.e("Error", stringData);
-            }
-
-        });
-
-// Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-    }
-
+public void openRegister(View view)
+{
+    Intent intent= new Intent(this,register.class)  ;
+    startActivity(intent);
+}
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

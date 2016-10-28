@@ -1,11 +1,12 @@
 package psl.com.aptitudetest;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class StartTest extends Activity implements View.OnClickListener{
+public class StartTest extends ActionBarActivity implements View.OnClickListener{
     private static String TAG = StartTest.class.getCanonicalName();
     DBManager dbm;
     Button opt1;
@@ -30,6 +32,8 @@ public class StartTest extends Activity implements View.OnClickListener{
     Button prev;
     Button nxt;
     TextView quest;
+    Toolbar toolbarBottom;
+
     int correctAns=0;
     List<QuestionPO> allQuestions;
     Map userAnswers;
@@ -46,6 +50,8 @@ public class StartTest extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_start_test);
         Bundle extras = getIntent().getExtras();
         String topicName="All";
+        toolbarBottom=(android.support.v7.widget.Toolbar)findViewById(R.id.toolbar_bottom);
+        setSupportActionBar(toolbarBottom);
         if (extras != null) {
 
             Set set=extras.keySet();
@@ -72,8 +78,8 @@ dbm= new DBManager(this);
          opt2= (Button) findViewById(R.id.button2);
          opt3= (Button) findViewById(R.id.button3);
          opt4= (Button) findViewById(R.id.button4);
-         prev= (Button) findViewById(R.id.btnPrev);
-         nxt= (Button) findViewById(R.id.btnNext);
+      //   prev= (Button) findViewById(R.id.btnPrev);
+       //  nxt= (Button) findViewById(R.id.btnNext);
          quest= (TextView) findViewById(R.id.question);
          pagination= (TextView)findViewById(R.id.currentQuestionCounter);
         simpleTimer= (Chronometer)findViewById(R.id.timer);
@@ -95,8 +101,8 @@ dbm= new DBManager(this);
         userAnswers= new HashMap(totalQuestions);
         if(totalQuestions!=0) {
             displayQuestion(allQuestions.get(currentQuestion));
-            prev.setOnClickListener(this);
-            nxt.setOnClickListener(this);
+           /* prev.setOnClickListener(this);
+            nxt.setOnClickListener(this);*/
             opt1.setOnClickListener(this);
             opt2.setOnClickListener(this);
             opt3.setOnClickListener(this);
@@ -121,8 +127,19 @@ public void displayQuestion(QuestionPO question)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_start_test, menu);
-        return true;
+       getMenuInflater().inflate(R.menu.menu_start_test, menu);
+
+      // getActionBar().setDisplayShowTitleEnabled(false);
+      // toolbarBottom.setLogo(getDrawable(R.drawable.guess));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                  @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                   //   Toast.makeText(getApplicationContext(), "Bottom toolbar pressed: ",Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+             });
+            return true;
     }
 
     @Override
@@ -133,7 +150,8 @@ public void displayQuestion(QuestionPO question)
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.prevMenu) {
+            Toast.makeText(getApplicationContext(), "Prev selected: ",Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -143,7 +161,7 @@ public void displayQuestion(QuestionPO question)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnPrev:
+          /*  case R.id.btnPrev:
                 if(currentQuestion>0){
                     currentQuestion--;
                     displayQuestion(allQuestions.get(currentQuestion));
@@ -173,6 +191,9 @@ public void displayQuestion(QuestionPO question)
                 checkIfalreadyAnswered(userAnswers,currentQuestion);
                 //Log.d(TAG,"currentQuestion["+currentQuestion+"]" + allQuestions.size());
                 break;
+
+            */
+
            /* case R.id.button1:if (allQuestions.get(currentQuestion).getCorrectAns()==1)
             {
                 Log.d(TAG,"Correct");

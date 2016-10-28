@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +24,10 @@ import java.sql.SQLException;
 
 
 public class HomeScreen extends ActionBarActivity {
+    private static String TAG = HomeScreen.class.getCanonicalName();
 DBManager dbm;
     //String navDrwerMENU[] = {"Formulae","Solved Questions"};
-    int ICONS[] = {R.drawable.formulae,R.drawable.back,R.drawable.fire,R.drawable.ic_dashboard,R.drawable.fire};
+    int ICONS[] = {R.drawable.formulae,R.drawable.guess,R.drawable.test,R.drawable.fire,R.drawable.formulae};
     //String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
     String[] topics;
     String navDrwerMENU[];
@@ -84,6 +86,7 @@ private   android.support.v7.widget.Toolbar toolbar;
                     Drawer.closeDrawers();
                     int choice= recyclerView.getChildPosition(child);
                           drawerClick(choice);
+                    Log.d(TAG,"choice is "+choice);
                     return true;
                 }
                 return false;
@@ -118,7 +121,7 @@ private   android.support.v7.widget.Toolbar toolbar;
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Toast.makeText(HomeScreen.this,"Clicked on"+topics[position],Toast.LENGTH_SHORT).show();
                 // Open new activity from here
-                Intent intent= new Intent(getApplicationContext(),StartTest.class);
+                Intent intent= new Intent(getApplicationContext(),Test.class);  // StartTest
                 intent.putExtra("topicName",topics[position]);
                 startActivity(intent);
             }
@@ -129,15 +132,19 @@ private   android.support.v7.widget.Toolbar toolbar;
         Intent intent;
         switch (position)
         {
-            case 1: //Intent intent= new Intent(this,FormulaeDisplay.class);
-                intent= new Intent(this,FormulaeDisplay.class);
+            case 0:
+                 intent= new Intent(this,Login.class);
+                startActivity(intent);
+                break;
+            case 1: //Intent intent= new Intent(this,FormulaeDisplay.class);    // Displays webview directly
+                intent= new Intent(this,topicList.class);
                     startActivity(intent);
                 break;
-            case 2:intent= new Intent(this,StartTest.class);
+            case 2:intent= new Intent(this,Test.class);
                 intent.putExtra("testmode","Guess");
                 startActivity(intent);
                 break;
-            case 3:intent= new Intent(this,StartTest.class);
+            case 3:intent= new Intent(this,Test.class);
                 intent.putExtra("testmode","Test");
                 startActivity(intent);
                 break;
@@ -171,9 +178,14 @@ private   android.support.v7.widget.Toolbar toolbar;
             return true;
         }
         else if(id==R.id.view_questions){
-            Intent intent= new Intent(this,StartTest.class);
+            Intent intent= new Intent(this,Test.class);
             startActivity(intent);
         }
+        else if(id==R.id.updateQuestions){
+            Intent intent= new Intent(this,UpdateQuestions.class);
+            startActivity(intent);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }

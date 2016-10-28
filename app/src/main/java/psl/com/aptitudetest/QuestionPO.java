@@ -11,8 +11,9 @@ public class QuestionPO {
     String opt4;
     int correctAns;
     int questionID;
+    String topicName;
 
-    public QuestionPO(int id,String question, String opt1, String opt2, String opt3, String opt4, int correctAns) {
+    public QuestionPO(int id,String question, String opt1, String opt2, String opt3, String opt4, int correctAns,String topic) {
         this.questionID=id;
         this.question = question;
         this.opt1 = opt1;
@@ -20,9 +21,9 @@ public class QuestionPO {
         this.opt3 = opt3;
         this.opt4 = opt4;
         this.correctAns = correctAns;
+        this.topicName=topic;
     }
-
-    public QuestionPO() {
+        public QuestionPO() {
         this.questionID=0;
         this.question = null;
         this.opt1 = null;
@@ -30,8 +31,16 @@ public class QuestionPO {
         this.opt3 = null;
         this.opt4 = null;
         this.correctAns = 0;
+        this.topicName=null;
+
+    }
+    public String getTopicName() {
+        return topicName;
     }
 
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
     public String getQuestion() {
         return question;
     }
@@ -98,6 +107,7 @@ public class QuestionPO {
                 ", opt3='" + opt3 + '\'' +
                 ", opt4='" + opt4 + '\'' +
                 ", correctAns=" + correctAns +
+                ", Topic=" + topicName +
                 '}';
     }
 }

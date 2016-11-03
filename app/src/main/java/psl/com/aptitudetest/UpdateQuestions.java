@@ -91,7 +91,6 @@ public class UpdateQuestions extends ActionBarActivity {
                         //reset progress bar and filesize status
                         progressStatus = 0; //
                         // totalSize = 0; //
-
                         String tag_json_arry = "json_array_req";
                         String url= "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/questions";
                         JsonArrayRequest req = new JsonArrayRequest(url,

@@ -1,5 +1,7 @@
 package psl.com.aptitudetest;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import psl.com.util.NetworkHelper;
+
 
 public class UpdateQuestions extends ActionBarActivity {
     private static String TAG = UpdateQuestions.class.getCanonicalName();
@@ -35,6 +39,7 @@ public class UpdateQuestions extends ActionBarActivity {
     ProgressBar progressbar;
     DBManager dbm;
     JSONArray array;
+    NetworkHelper netObj;
     private int progressStatus=0;
     private Handler mHandler;
     private long totalSize = 1;
@@ -50,12 +55,12 @@ public class UpdateQuestions extends ActionBarActivity {
         dbm= new DBManager(this);
         try {
             dbm.open();
-            String[]input={"4"};
+     /*       String[]input={"4"};
             dbm.deleteByQID(input);
             input[0]="2";
             dbm.deleteByQID(input);
             input[0]="3";
-            dbm.deleteByQID(input);
+            dbm.deleteByQID(input);*/
         }
         catch(Exception e)
         {
@@ -72,88 +77,106 @@ public class UpdateQuestions extends ActionBarActivity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressbar.setProgress(0);
-                progressbar.setMax(100);
-                //reset progress bar and filesize status
-                progressStatus = 0; //
-               // totalSize = 0; //
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                netObj= NetworkHelper.getInstance(cm); //  used singleton for this
+                if(netObj.isConnectedToInternet())
+                {
+                    if(netObj.isOnline()) // Disable the button and download questions
+                    {
+                        //Toast.makeText(getApplicationContext(),"Internet access ON",Toast.LENGTH_SHORT).show();
+                        updateButton.setClickable(false);
+                        /* Code handling UPDATE*/
+                        progressbar.setProgress(0);
+                        progressbar.setMax(100);
+                        //reset progress bar and filesize status
+                        progressStatus = 0; //
+                        // totalSize = 0; //
 
-                String tag_json_arry = "json_array_req";
-                String url= "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/questions";
-                JsonArrayRequest req = new JsonArrayRequest(url,
-                        new Response.Listener<JSONArray>() {
+                        String tag_json_arry = "json_array_req";
+                        String url= "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/questions";
+                        JsonArrayRequest req = new JsonArrayRequest(url,
+                                new Response.Listener<JSONArray>() {
+                                    @Override
+                                    public void onResponse(JSONArray response) {
+                                        Log.d(TAG, response.toString());
+                                        array= response;
+                                        totalSize= array.length();
+                                        final List <Integer>presentQIDs = dbm.getAllQuestionIDs();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try{
+                                                    for(int i=0;i<totalSize;i++)
+                                                    {
+                                                        JSONObject obj = (JSONObject) array.get(i);
+                                                        // before adding chk if this id is already present in database or not
+
+                                                        try {
+                                                            Thread.sleep(1000);
+                                                        } catch (InterruptedException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        if(presentQIDs.contains(obj.getInt("id")))
+                                                        {
+                                                            Log.d(TAG,"QID already present "+obj.getInt("id"));
+                                                        }
+                                                        else{
+                                                            dbm.addQuestion(String .valueOf(obj.getInt("id")),obj.getString("question"),obj.getString("option1"),
+                                                                    obj.getString("option2"),obj.getString("option3"),obj.getString("option4"),String.valueOf(obj.getInt("correctAnswer")),
+                                                                    obj.getString("topic"));
+                                                            Log.d(TAG,"New Question added "+obj.getInt("id"));
+                                                        }
+                                                        inserted++;
+                                                        doOperation();
+                                                        progressbar.setProgress(progressStatus);
+                                                        if(i==totalSize) // progressStatus>100 old value
+                                                        {
+                                                            if(mHandler!=null)
+                                                            {
+                                                                Message msg= mHandler.obtainMessage();
+                                                                msg.obj=new Integer(String.valueOf(inserted));
+                                                                mHandler.sendMessage(msg);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }}
+                                        }).start();
+
+                                    }
+                                }, new Response.ErrorListener() {
                             @Override
-                            public void onResponse(JSONArray response) {
-                                Log.d(TAG, response.toString());
-                                   array= response;
-                                    totalSize= array.length();
-                                    final List <Integer>presentQIDs = dbm.getAllQuestionIDs();
-                                   new Thread(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           try{
-                                           for(int i=0;i<totalSize;i++)
-                                           {
-                                               JSONObject obj = (JSONObject) array.get(i);
-                                               // before adding chk if this id is already present in database or not
-
-                                               try {
-                                                   Thread.sleep(1000);
-                                               } catch (InterruptedException e) {
-                                                   e.printStackTrace();
-                                               }
-                                               if(presentQIDs.contains(obj.getInt("id")))
-                                               {
-                                                   Log.d(TAG,"QID already present "+obj.getInt("id"));
-                                               }
-                                               else{
-                                                   dbm.addQuestion(String .valueOf(obj.getInt("id")),obj.getString("question"),obj.getString("option1"),
-                                                           obj.getString("option2"),obj.getString("option3"),obj.getString("option4"),String.valueOf(obj.getInt("correctAnswer")),
-                                                           obj.getString("topic"));
-                                                   Log.d(TAG,"New Question added "+obj.getInt("id"));
-                                               }
-                                               inserted++;
-                                               doOperation();
-                                               progressbar.setProgress(progressStatus);
-                                               if(progressStatus>100)
-                                               {
-                                                   if(mHandler!=null)
-                                                   {
-                                                       Message msg= mHandler.obtainMessage();
-                                                       msg.obj=new Integer(String.valueOf(inserted));
-                                                       mHandler.sendMessage(msg);
-                                                   }
-                                               }
-                                               }
-                                       }
-                                       catch (JSONException e) {
-                                           e.printStackTrace();
-                                       }}
-                                   }).start();
+                            public void onErrorResponse(VolleyError error) {
+                                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                Log.d(TAG,"Network Response"+error.toString());
+                                Log.d(TAG,"Trace- "+error.getStackTrace().toString());
 
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyLog.d(TAG, "Error: " + error.getMessage());
-                         Log.d(TAG,"Network Response"+error.toString());
-                        Log.d(TAG,"Trace- "+error.getStackTrace().toString());
 
+                        }){
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap<String, String> headers = new HashMap<String, String>();
+                                headers.put("Content-Type", "application/json");
+                                headers.put("Accept", "application/json");
+                                // headers.put("apiKey", "xxxxxxxxxxxxxxx");  // add api key in future
+                                return headers;
+                            }
+                        };
+                        AppController.getInstance().addToRequestQueue(req, tag_json_arry);  // Online REquest made
+                        // Adding request to request queue
+                        /*Update code END*/
                     }
-
-                }){
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Content-Type", "application/json");
-                        headers.put("Accept", "application/json");
-                        // headers.put("apiKey", "xxxxxxxxxxxxxxx");  // add api key in future
-                        return headers;
-                    }
-                };
-                    AppController.getInstance().addToRequestQueue(req, tag_json_arry);  // Online REquest made
-// Adding request to request queue
-            }//end of onClick method
+                    else
+                       Toast.makeText(getApplicationContext(),"Please check your internet connection",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"No Internet connection",Toast.LENGTH_SHORT).show();
+                }
+              }//end of onClick method
         });
 
 
@@ -163,7 +186,6 @@ public class UpdateQuestions extends ActionBarActivity {
 
         if(totalSize>0)
         progressStatus+=(inserted * 100)/totalSize; //
-
         return progressStatus;
           }
 

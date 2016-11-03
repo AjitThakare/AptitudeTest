@@ -1,5 +1,7 @@
 package psl.com.aptitudetest;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -20,6 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import psl.com.util.NetworkHelper;
+
 
 public class register extends ActionBarActivity {
     private static String TAG = register.class.getCanonicalName();
@@ -28,6 +33,7 @@ public class register extends ActionBarActivity {
     EditText mobile ;
     EditText email ;
     Button register;
+    NetworkHelper netObj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,45 +49,60 @@ register = (Button)findViewById(R.id.register);
 
     public void registerMe(View view)
     {
-        String tag_json_obj = "json_obj_req";
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        netObj= NetworkHelper.getInstance(cm);
+        if(netObj.isConnectedToInternet())  // After Submit click, POST it through this code
+        {
+            if(netObj.isOnline()) // Disable the button and download questions
+            {
+                String tag_json_obj = "json_obj_req";
 
-        String url = "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/users";
+                String url = "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/users";
 
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("usrName", username.getText().toString());
-        params.put("password", password.getText().toString());
-        params.put("mobileNo", mobile.getText().toString());
-        params.put("emailID", email.getText().toString());
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("usrName", username.getText().toString());
+                params.put("password", password.getText().toString());
+                params.put("mobileNo", mobile.getText().toString());
+                params.put("emailID", email.getText().toString());
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(url, new JSONObject(params),
-                new Response.Listener<JSONObject>() {
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(url, new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.d(TAG, response.toString());
+                            }
+                        }, new Response.ErrorListener() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, response.toString());
+                    public void onErrorResponse(VolleyError error) {
+
+                        NetworkResponse errorRes = error.networkResponse;
+                        String stringData = "";
+                        if (errorRes != null && errorRes.data != null) {
+                            try {
+                                stringData = new String(errorRes.data, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.e("Error", stringData);
                     }
-                }, new Response.ErrorListener() {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                NetworkResponse errorRes = error.networkResponse;
-                String stringData = "";
-                if (errorRes != null && errorRes.data != null) {
-                    try {
-                        stringData = new String(errorRes.data, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.e("Error", stringData);
-            }
-
-        });
+                });
 
 // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+                AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+            }
+            else
+                Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"No Internet connection",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

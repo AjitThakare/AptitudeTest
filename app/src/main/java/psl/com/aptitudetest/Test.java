@@ -1,8 +1,10 @@
 package psl.com.aptitudetest;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -20,11 +22,14 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import psl.com.util.NetworkHelper;
 
 
 public class Test extends ActionBarActivity implements View.OnClickListener{
@@ -47,8 +52,10 @@ public class Test extends ActionBarActivity implements View.OnClickListener{
     TextView pagination;
     String testMode="Test";
     Map resultAnalysis;
+    NetworkHelper netObj;
     private int currentQuestion=0; // if this is static then test resumes with last attempted question
     private ActionMenuView amvMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,7 +224,9 @@ public class Test extends ActionBarActivity implements View.OnClickListener{
         return super.onOptionsItemSelected(item);
     }
 public void reportQuestion()
-{
+{       ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        netObj= NetworkHelper.getInstance(cm);
+
     LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
     View popupView = layoutInflater.inflate(R.layout.report_popup,null );
     final PopupWindow popupWindow = new PopupWindow(
@@ -235,6 +244,21 @@ public void reportQuestion()
         }});
 
     popupWindow.showAtLocation(opt1, Gravity.CENTER,0,0);
+
+    if(netObj.isConnectedToInternet())  // After Submit click, POST it through this code
+    {
+        if(netObj.isOnline()) // Disable the button and download questions
+        {
+            // POST data from here
+        }
+        else
+            Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+        Toast.makeText(getApplicationContext(),"No Internet connection",Toast.LENGTH_SHORT).show();
+    }
+
 
 }
 

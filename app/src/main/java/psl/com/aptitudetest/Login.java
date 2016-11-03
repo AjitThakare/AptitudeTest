@@ -1,6 +1,8 @@
 package psl.com.aptitudetest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -26,6 +28,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import psl.com.util.NetworkHelper;
 import psl.com.util.URLHelper;
 
 public class Login extends ActionBarActivity {
@@ -34,7 +37,7 @@ EditText username;
     EditText password;
     Button loginButton;
     ImageView logo;
-
+    NetworkHelper netObj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,13 @@ EditText username;
     }
 
     private void login() {
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        netObj= NetworkHelper.getInstance(cm);
+        if(netObj.isConnectedToInternet())  // After Submit click, POST it through this code
+        {
+            if(netObj.isOnline()) // Disable the button and download questions
+            {
         String  tag_string_req = "string_req";
         String url = "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/users/login";
 
@@ -97,7 +107,16 @@ EditText username;
 
 // Adding request to request queue
              AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+            } // net is available
+            else
+                Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"No Internet connection",Toast.LENGTH_SHORT).show();
+        }
     }
+
     private void getAllUsers(){
         // Tag used to cancel the request
         String tag_json_arry = "json_array_req";

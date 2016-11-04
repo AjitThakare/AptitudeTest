@@ -84,7 +84,7 @@ EditText username;
 
             try {
                 JSONObject object= new JSONObject(response);
-                Log.d(TAG, object.get("id").toString());   // use this id to Request all required info of user
+                Log.d(TAG, object.get("id").toString());   // use this id to Request all required info of user TODO add username to page after login
                 Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_SHORT).show(); // Store username and write Welcome user
                    Intent intent = new Intent(getApplicationContext(),HomeScreen.class);
                 startActivity(intent);

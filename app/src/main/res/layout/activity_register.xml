@@ -6,6 +6,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="psl.com.aptitudetest.register">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/general" />
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
@@ -63,4 +70,6 @@
         android:layout_marginTop="45dp"
         android:onClick="registerMe"
         android:text="Sign Up"/>
+
+
 </RelativeLayout>

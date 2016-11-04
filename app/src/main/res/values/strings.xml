@@ -13,11 +13,27 @@
 
     <string-array name="topics">
         <item>Age</item>
+        <item>Allegation or Mixture</item>
         <item>Area</item>
+        <item>Average</item>
+        <item>Boats and Streams</item>
+        <item>Calendar</item>
         <item>Clock</item>
+        <item>Compound Interest</item>
+        <item>Height and Distance</item>
+        <item>Partnership</item>
         <item>Percentage</item>
-        <item>Profit</item>
-        <item>Train</item>
+        <item>Permutation and Combination</item>
+        <item>Pipes and Cistern</item>
+        <item>Probability</item>
+        <item>Profit and Loss</item>
+        <item>Ratio and Proportion</item>
+        <item>Simple Interest</item>
+        <item>Simplification</item>
+        <item>Time and Distance</item>
+        <item>Time and Work</item>
+        <item>Trains</item>
+        <item>True Discount</item>
         <item>Work</item>
     </string-array>
     <string-array name="drawer_menu">

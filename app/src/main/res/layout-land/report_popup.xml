@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:weightSum="1">
     <RelativeLayout
-        android:layout_width="400dp"
+        android:layout_width="361dp"
         android:layout_height="225dp"
         android:background="@color/primary"
        >
@@ -26,6 +26,7 @@
 
            <TextView
                android:id="@+id/textView6"
+               style="@style/TextAppearance.AppCompat.Headline"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_alignTop="@+id/closePopup"
@@ -35,8 +36,15 @@
                android:layout_marginRight="10dp"
                android:text="What went wrong ?" />
 
+ <RadioGroup
+     android:id="@+id/errorGroup"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_above="@+id/textView5"
+     android:layout_alignParentStart="true"
+     android:orientation="horizontal">
 
-        <RadioButton
+     <RadioButton
             android:id="@+id/radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +52,7 @@
             android:layout_below="@+id/closePopup"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:checked="false"
+            android:checked="true"
             android:text="Question" />
 
         <RadioButton
@@ -68,17 +76,7 @@
             android:layout_marginRight="5dp"
             android:checked="false"
             android:text="Explanation" />
-           <TextView
-               android:id="@+id/textView5"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_alignStart="@+id/radioButton"
-               android:layout_below="@+id/radioButton"
-               android:layout_marginLeft="5dp"
-               android:layout_marginRight="5dp"
-               android:layout_marginTop="3dp"
-               android:text="Issue :"
-               android:textAppearance="?android:attr/textAppearanceMedium" />
+ </RadioGroup>
 
         <EditText
             android:id="@+id/editText"
@@ -97,6 +95,17 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:text="Submit" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="Issue :"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </RelativeLayout>
 

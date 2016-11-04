@@ -31,7 +31,11 @@ DBManager dbm;
     //String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
     String[] topics;
     String navDrwerMENU[];
-        int [] imgeForTopic={R.drawable.age,R.drawable.area,R.drawable.clock,R.drawable.percentage,R.drawable.profit,R.drawable.train,R.drawable.work};
+        int [] imgeForTopic={R.drawable.age,R.drawable.general,R.drawable.area,R.drawable.general,R.drawable.general,
+                R.drawable.general,R.drawable.clock,R.drawable.general,R.drawable.general,R.drawable.general,
+                R.drawable.percentage,R.drawable.general,R.drawable.general,R.drawable.general,R.drawable.profit,
+                R.drawable.general,R.drawable.general,R.drawable.general,R.drawable.general,R.drawable.work,
+                R.drawable.train,R.drawable.general,R.drawable.general};
     GridView grid;
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View

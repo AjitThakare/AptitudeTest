@@ -94,6 +94,9 @@ register = (Button)findViewById(R.id.register);
 
 // Adding request to request queue
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
+                //TODO , save username in shared preference, close this activity and start Homepage activity
+
             }
             else
                 Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();

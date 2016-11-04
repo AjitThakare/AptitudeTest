@@ -40,7 +40,11 @@ public static String TAG=topicList.class.getCanonicalName();
 
        // list=(ListView)findViewById(R.id.list);
         topics=getApplicationContext().getResources().getStringArray(R.array.topics);
-        int [] imgeForTopic={R.drawable.age,R.drawable.area,R.drawable.clock,R.drawable.percentage,R.drawable.profit,R.drawable.train,R.drawable.work};
+        int [] imgeForTopic={R.drawable.age,R.drawable.general,R.drawable.area,R.drawable.general,R.drawable.general,
+                R.drawable.general,R.drawable.clock,R.drawable.general,R.drawable.general,R.drawable.general,
+                R.drawable.percentage,R.drawable.general,R.drawable.general,R.drawable.general,R.drawable.profit,
+                R.drawable.general,R.drawable.general,R.drawable.general,R.drawable.general,R.drawable.work,
+                R.drawable.train,R.drawable.general,R.drawable.general};
         TopicListArrayAdapter adapter= new TopicListArrayAdapter(topics,this,imgeForTopic);
         setListAdapter(adapter);
       }

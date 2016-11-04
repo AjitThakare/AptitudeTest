@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +55,8 @@ public class Test extends ActionBarActivity implements View.OnClickListener{
     String testMode="Test";
     Map resultAnalysis;
     NetworkHelper netObj;
+    RadioGroup reportGroup;
+    RadioButton reportRadioBtn;
     private int currentQuestion=0; // if this is static then test resumes with last attempted question
     private ActionMenuView amvMenu;
 
@@ -228,7 +232,7 @@ public void reportQuestion()
         netObj= NetworkHelper.getInstance(cm);
 
     LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-    View popupView = layoutInflater.inflate(R.layout.report_popup,null );
+   final View popupView = layoutInflater.inflate(R.layout.report_popup,null );
     final PopupWindow popupWindow = new PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -244,7 +248,19 @@ public void reportQuestion()
         }});
 
     popupWindow.showAtLocation(opt1, Gravity.CENTER,0,0);
+    reportGroup = (RadioGroup)popupView.findViewById(R.id.errorGroup);
+    Button submit= (Button) popupView.findViewById(R.id.submit);
 
+    submit.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int selectedId= reportGroup.getCheckedRadioButtonId();
+            reportRadioBtn=(RadioButton)popupView.findViewById(selectedId);
+            TextView mistakeText = (TextView)popupView.findViewById(R.id.editText);
+            String txt= String.valueOf(mistakeText.getText());
+            Toast.makeText(getApplicationContext(),reportRadioBtn.getText()+" is selected "+txt,Toast.LENGTH_SHORT).show(); // NOw send this txt BY http call
+        }
+    }); // End of listener
     if(netObj.isConnectedToInternet())  // After Submit click, POST it through this code
     {
         if(netObj.isOnline()) // Disable the button and download questions

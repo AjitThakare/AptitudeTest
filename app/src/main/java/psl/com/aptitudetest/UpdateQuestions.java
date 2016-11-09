@@ -55,11 +55,9 @@ public class UpdateQuestions extends ActionBarActivity {
         dbm= new DBManager(this);
         try {
             dbm.open();
-     /*       String[]input={"4"};
+          /*  String[]input={"13"};  delete some questions to test
             dbm.deleteByQID(input);
-            input[0]="2";
-            dbm.deleteByQID(input);
-            input[0]="3";
+            input[0]="15";
             dbm.deleteByQID(input);*/
         }
         catch(Exception e)
@@ -70,7 +68,7 @@ public class UpdateQuestions extends ActionBarActivity {
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                Toast.makeText(getApplicationContext(),(int) msg.obj+" Questions added",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),(int) msg.obj+" New Questions added",Toast.LENGTH_SHORT).show();
                 message.setText("Update Complete!");
             }
         };
@@ -84,7 +82,8 @@ public class UpdateQuestions extends ActionBarActivity {
                     if(netObj.isOnline()) // Disable the button and download questions
                     {
                         //Toast.makeText(getApplicationContext(),"Internet access ON",Toast.LENGTH_SHORT).show();
-                        updateButton.setClickable(false);
+                        //updateButton.setClickable(false);
+                        updateButton.setEnabled(false);
                         /* Code handling UPDATE*/
                         progressbar.setProgress(0);
                         progressbar.setMax(100);
@@ -110,11 +109,6 @@ public class UpdateQuestions extends ActionBarActivity {
                                                         JSONObject obj = (JSONObject) array.get(i);
                                                         // before adding chk if this id is already present in database or not
 
-                                                        try {
-                                                            Thread.sleep(1000);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
                                                         if(presentQIDs.contains(obj.getInt("id")))
                                                         {
                                                             Log.d(TAG,"QID already present "+obj.getInt("id"));
@@ -124,11 +118,12 @@ public class UpdateQuestions extends ActionBarActivity {
                                                                     obj.getString("option2"),obj.getString("option3"),obj.getString("option4"),String.valueOf(obj.getInt("correctAnswer")),
                                                                     obj.getString("topic"));
                                                             Log.d(TAG,"New Question added "+obj.getInt("id"));
+                                                            inserted++;
                                                         }
-                                                        inserted++;
-                                                        doOperation();
+                                                        progressStatus+=(i * 100)/totalSize; // progress bar shown using this value
+
                                                         progressbar.setProgress(progressStatus);
-                                                        if(i==totalSize) // progressStatus>100 old value
+                                                        if(i==totalSize-1) // progressStatus>100 old value
                                                         {
                                                             if(mHandler!=null)
                                                             {
@@ -177,17 +172,7 @@ public class UpdateQuestions extends ActionBarActivity {
                 }
               }//end of onClick method
         });
-
-
     }
-
-    private int doOperation() {
-
-        if(totalSize>0)
-        progressStatus+=(inserted * 100)/totalSize; //
-        return progressStatus;
-          }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

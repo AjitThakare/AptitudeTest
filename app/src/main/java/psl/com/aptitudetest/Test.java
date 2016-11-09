@@ -26,6 +26,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +74,7 @@ public class Test extends ActionBarActivity implements View.OnClickListener{
         setContentView(R.layout.activity_test);
         Bundle extras = getIntent().getExtras();
         String topicName="All";
+        AppController.getInstance(this);
        // toolbarBottom=(android.support.v7.widget.Toolbar)findViewById(R.id.toolbar_bottom);
         //setSupportActionBar(toolbarBottom);
         if (extras != null) {
@@ -230,7 +239,6 @@ public class Test extends ActionBarActivity implements View.OnClickListener{
 public void reportQuestion()
 {       ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         netObj= NetworkHelper.getInstance(cm);
-
     LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
    final View popupView = layoutInflater.inflate(R.layout.report_popup,null );
     final PopupWindow popupWindow = new PopupWindow(
@@ -258,14 +266,54 @@ public void reportQuestion()
             reportRadioBtn=(RadioButton)popupView.findViewById(selectedId);
             TextView mistakeText = (TextView)popupView.findViewById(R.id.editText);
             String txt= String.valueOf(mistakeText.getText());
-            Toast.makeText(getApplicationContext(),reportRadioBtn.getText()+" is selected "+txt,Toast.LENGTH_SHORT).show(); // NOw send this txt BY http call
-        }
+           // Toast.makeText(getApplicationContext(),reportRadioBtn.getText()+" is selected "+txt,Toast.LENGTH_SHORT).show(); // NOw send this txt BY http call
+            if(netObj.isOnline())
+            {        String tag_json_obj = "report_question";
+                    String url = "http://aptitude.southeastasia.cloudapp.azure.com:8080/test/services/reports";
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("qid", String.valueOf(allQuestions.get(currentQuestion).getQuestionID()));
+                    params.put("mistakeField", reportRadioBtn.getText().toString());
+                    params.put("issue", txt);
+                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(url, new JSONObject(params),
+                            new Response.Listener<JSONObject>() {
+
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    Log.d(TAG, response.toString());
+                                }
+                            }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            NetworkResponse errorRes = error.networkResponse;
+                            String stringData = "";
+                            if (errorRes != null && errorRes.data != null) {
+                                try {
+                                    stringData = new String(errorRes.data, "UTF-8");
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Log.e("Error", stringData);
+                        }
+
+                    });
+
+// Adding request to request queue
+                    AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+                    Toast.makeText(getApplicationContext(), "Reported !", Toast.LENGTH_SHORT).show();
+                    popupWindow.dismiss(); // close the popup
+                }
+            }
+      //  }    if che brackets
+
     }); // End of listener
     if(netObj.isConnectedToInternet())  // After Submit click, POST it through this code
     {
         if(netObj.isOnline()) // Disable the button and download questions
         {
-            // POST data from here
+            //simply used else part for displaying internet related warning msgs
         }
         else
             Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
@@ -488,7 +536,6 @@ public void reportQuestion()
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    // next TODO go to next question
                     nxt.callOnClick();
                 }
             }, 500);

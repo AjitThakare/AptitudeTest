@@ -2,9 +2,11 @@ package psl.com.aptitudetest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -38,17 +42,51 @@ EditText username;
     Button loginButton;
     ImageView logo;
     NetworkHelper netObj;
+    SharedPreferences sharedpref;
+    SharedPreferences.Editor editor;
+    ViewSwitcher switcher;
+    Button logout;
+    Button sync;
+    TextView syncStatus;
+    Toolbar toolbar;
+    Toolbar toolbar2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        toolbar= (Toolbar) findViewById(R.id.tToolbar);
+        toolbar.setTitle("Login");
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        toolbar2= (Toolbar) findViewById(R.id.tToolbar2);
+        toolbar2.setTitle("Online Sync");
+        toolbar2.setNavigationIcon(R.drawable.back);
+        toolbar2.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         username= (EditText) findViewById(R.id.username);
         password= (EditText) findViewById(R.id.password);
         loginButton= (Button) findViewById(R.id.login);
         logo= (ImageView)findViewById(R.id.logo);
         logo.setImageResource(R.drawable.ic_launcher);
+        switcher= (ViewSwitcher) findViewById(R.id.ViewSwitcher);
         AppController.getInstance(this); // App controller instantiated !
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        sharedpref= getSharedPreferences(getString(R.string.spf_file_key), Context.MODE_PRIVATE);
+         editor = sharedpref.edit();
+        logout= (Button) findViewById(R.id.logout);
+        sync =  (Button) findViewById(R.id.syncnow);
+        syncStatus = (TextView) findViewById(R.id.last_sync_note);
+
+                loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                login();
@@ -56,6 +94,32 @@ EditText username;
               //  getAllUsers();
             }
         });
+    Log.d(TAG,"loggedIN = "+sharedpref.getString(getString(R.string.logged_in_check),"false"));
+
+        if(sharedpref.getString(getString(R.string.logged_in_check),"false").equalsIgnoreCase("true"))
+        {
+            switcher.showNext(); //
+        }
+
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Sync available to premium users",Toast.LENGTH_SHORT).show();
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editor.putString(getString(R.string.saved_username), ""); // saved username in sharedPref
+                editor.putString(getString(R.string.logged_in_check), "false");
+                editor.commit();
+                switcher.showNext();
+            }
+        });
+
+
+
+
     }
 
     private void login() {
@@ -86,7 +150,12 @@ EditText username;
                 JSONObject object= new JSONObject(response);
                 Log.d(TAG, object.get("id").toString());   // use this id to Request all required info of user TODO add username to page after login
                 Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_SHORT).show(); // Store username and write Welcome user
-                   Intent intent = new Intent(getApplicationContext(),HomeScreen.class);
+                editor.putString(getString(R.string.saved_username), username.getText().toString()); // saved username in sharedPref
+                editor.putString(getString(R.string.logged_in_check),"true");
+                editor.commit();
+                Toast.makeText(getApplicationContext(),sharedpref.getString(getString(R.string.saved_username),"adsf"),Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getApplicationContext(),HomeScreen.class);
                 startActivity(intent);
 
             } catch (JSONException e) {

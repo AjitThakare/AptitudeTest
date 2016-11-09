@@ -3,6 +3,7 @@ package psl.com.aptitudetest;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,12 +17,22 @@ public static String TAG=topicList.class.getCanonicalName();
     //ListView list;
     String [] topics;
     ImageButton button;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
         button = (ImageButton)findViewById(R.id.closeButton);
+        toolbar= (Toolbar) findViewById(R.id.tToolbar);
+        toolbar.setTitle("Topics");
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         button.setImageResource(R.drawable.close_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

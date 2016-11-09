@@ -2,6 +2,7 @@ package psl.com.aptitudetest;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +21,17 @@ public class resultGraph extends ActionBarActivity {
     PieChart pieChart;
     ImageButton close;
     ArrayList <Integer>colorArray;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle extras=getIntent().getExtras();
-
         setContentView(R.layout.activity_result_graph);
+        toolbar= (Toolbar) findViewById(R.id.tToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Result");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
         pieChart=(PieChart)findViewById(R.id.chart);
         close=(ImageButton)findViewById(R.id.closeButton);
         close.setImageResource(R.drawable.close_button);
@@ -108,7 +113,8 @@ public class resultGraph extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 

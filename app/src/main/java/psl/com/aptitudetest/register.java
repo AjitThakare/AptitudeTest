@@ -1,9 +1,11 @@
 package psl.com.aptitudetest;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,17 +36,29 @@ public class register extends ActionBarActivity {
     EditText email ;
     Button register;
     NetworkHelper netObj;
+    SharedPreferences sharedpref;
+    SharedPreferences.Editor editor;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        toolbar= (Toolbar) findViewById(R.id.tToolbar);
+        toolbar.setTitle("Register");
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
          username =(EditText) findViewById(R.id.username);
          password =(EditText) findViewById(R.id.password);
          mobile =(EditText) findViewById(R.id.mobile);
          email =(EditText) findViewById(R.id.email);
-register = (Button)findViewById(R.id.register);
-
+         register = (Button)findViewById(R.id.register);
+         sharedpref= getSharedPreferences(getString(R.string.spf_file_key), Context.MODE_PRIVATE);
+         editor = sharedpref.edit();
     }
 
     public void registerMe(View view)
@@ -96,7 +110,9 @@ register = (Button)findViewById(R.id.register);
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
                 //TODO , save username in shared preference, close this activity and start Homepage activity
-
+                editor.putString(getString(R.string.saved_username),username.getText().toString()); // saved username in sharedPref
+                editor.putString(getString(R.string.logged_in_check), "true");
+                editor.commit();
             }
             else
                 Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();

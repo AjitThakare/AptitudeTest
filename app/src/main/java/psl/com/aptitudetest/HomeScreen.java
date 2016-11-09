@@ -3,6 +3,7 @@ package psl.com.aptitudetest;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
@@ -26,6 +29,8 @@ import java.sql.SQLException;
 public class HomeScreen extends ActionBarActivity {
     private static String TAG = HomeScreen.class.getCanonicalName();
 DBManager dbm;
+
+    ImageButton headerimage = null;
     //String navDrwerMENU[] = {"Formulae","Solved Questions"};
     int ICONS[] = {R.drawable.formulae,R.drawable.guess,R.drawable.test,R.drawable.fire,R.drawable.formulae};
     //String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
@@ -42,6 +47,8 @@ DBManager dbm;
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
     DrawerLayout Drawer;                                  // Declaring DrawerLayout
     ActionBarDrawerToggle mDrawerToggle;                  // Declaring Action Bar Drawer Toggle
+    SharedPreferences sharedpref;
+    SharedPreferences.Editor editor;
 private   android.support.v7.widget.Toolbar toolbar;
 
     @Override
@@ -54,6 +61,8 @@ private   android.support.v7.widget.Toolbar toolbar;
         topics = context.getResources().getStringArray(R.array.topics);
         navDrwerMENU =context.getResources().getStringArray(R.array.drawer_menu);
         dbm= new DBManager(this);
+        sharedpref= getSharedPreferences(getString(R.string.spf_file_key), Context.MODE_PRIVATE);
+        editor = sharedpref.edit();
         try {
             dbm.open();
             final int REQUEST_CODE_ASK_PERMISSIONS = 123;
@@ -72,7 +81,6 @@ private   android.support.v7.widget.Toolbar toolbar;
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MyAdapter(navDrwerMENU,ICONS,this);
         mRecyclerView.setAdapter(mAdapter);
-
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         final GestureDetector mGestureDetector = new GestureDetector(HomeScreen.this, new GestureDetector.SimpleOnGestureListener() {
@@ -82,6 +90,7 @@ private   android.support.v7.widget.Toolbar toolbar;
             }
 
         });
+
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
@@ -89,7 +98,7 @@ private   android.support.v7.widget.Toolbar toolbar;
                 if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
                     Drawer.closeDrawers();
                     int choice= recyclerView.getChildPosition(child);
-                          drawerClick(choice);
+                    drawerClick(choice);
                     Log.d(TAG,"choice is "+choice);
                     return true;
                 }
@@ -106,6 +115,19 @@ private   android.support.v7.widget.Toolbar toolbar;
                 super.onDrawerOpened(drawerView);
                 // code here will execute once the drawer is opened( As I dont want anything happened whe drawer is
                 // open I am not going to put anything here)
+                TextView header= (TextView)findViewById(R.id.HEADER);
+                String defaultValue = "";
+                String username = sharedpref.getString(getString(R.string.saved_username), defaultValue);
+                header.setText(username);
+
+                //headerimage= (ImageButton) Drawer.findViewById(R.id.loginButton);
+                headerimage= (ImageButton) findViewById(R.id.loginButton);
+                headerimage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -123,7 +145,7 @@ private   android.support.v7.widget.Toolbar toolbar;
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast.makeText(HomeScreen.this,"Clicked on"+topics[position],Toast.LENGTH_SHORT).show();
+               // Toast.makeText(HomeScreen.this,"Clicked on"+topics[position],Toast.LENGTH_SHORT).show();
                 // Open new activity from here
                 Intent intent= new Intent(getApplicationContext(),Test.class);  // StartTest
                 intent.putExtra("topicName",topics[position]);
@@ -137,8 +159,9 @@ private   android.support.v7.widget.Toolbar toolbar;
         switch (position)
         {
             case 0:
-                 intent= new Intent(this,Login.class);
+                intent= new Intent(this,Login.class);
                 startActivity(intent);
+
                 break;
             case 1: //Intent intent= new Intent(this,FormulaeDisplay.class);    // Displays webview directly
                 intent= new Intent(this,topicList.class);

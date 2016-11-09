@@ -110,7 +110,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public void onClick(View v) {
           // Toast.makeText(contxt,"Position is"+getPosition(),Toast.LENGTH_SHORT).show();
                        // Based on POsition invoke different intents NOW
-        }
+                   }
     }
 
 }

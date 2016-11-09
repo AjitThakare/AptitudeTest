@@ -34,7 +34,7 @@
         <item>Time and Work</item>
         <item>Trains</item>
         <item>True Discount</item>
-        <item>Work</item>
+        <item>Volume and Surface Area</item>
     </string-array>
     <string-array name="drawer_menu">
         <item>Formulae</item>
@@ -52,5 +52,8 @@
     <string name="title_activity_update_questions">UpdateQuestions</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_test">Test</string>
+    <string name="saved_username">USER</string>
+    <string name="spf_file_key">preference</string>
+    <string name="logged_in_check">loggedin</string>
 
 </resources>

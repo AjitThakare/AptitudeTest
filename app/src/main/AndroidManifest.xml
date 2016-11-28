@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -63,6 +64,21 @@
         <activity
             android:name=".Test"
             android:label="@string/title_activity_test" >
+        </activity>
+
+        <service
+            android:name=".HtmlFetcher"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".explanation"
+            android:label="@string/title_activity_explanation" >
+        </activity>
+        <activity
+            android:name=".FullScreenAd"
+            android:label="@string/title_activity_full_screen_ad" >
         </activity>
     </application>
 

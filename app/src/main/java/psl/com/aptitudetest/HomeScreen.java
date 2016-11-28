@@ -32,7 +32,7 @@ DBManager dbm;
 
     ImageButton headerimage = null;
     //String navDrwerMENU[] = {"Formulae","Solved Questions"};
-    int ICONS[] = {R.drawable.formulae,R.drawable.guess,R.drawable.test,R.drawable.fire,R.drawable.formulae};
+    int ICONS[] = {R.drawable.formulae,R.drawable.formulae,R.drawable.guess,R.drawable.test,R.drawable.fire};
     //String [] topics={"Age","Area","Clock","Percentage","Profit","Train","Work"};
     String[] topics;
     String navDrwerMENU[];
@@ -63,6 +63,7 @@ private   android.support.v7.widget.Toolbar toolbar;
         dbm= new DBManager(this);
         sharedpref= getSharedPreferences(getString(R.string.spf_file_key), Context.MODE_PRIVATE);
         editor = sharedpref.edit();
+        startService(new Intent(getBaseContext(),HtmlFetcher.class));
         try {
             dbm.open();
             final int REQUEST_CODE_ASK_PERMISSIONS = 123;
@@ -165,13 +166,20 @@ private   android.support.v7.widget.Toolbar toolbar;
                 break;
             case 1: //Intent intent= new Intent(this,FormulaeDisplay.class);    // Displays webview directly
                 intent= new Intent(this,topicList.class);
+                intent.putExtra("goal","formulae");
                     startActivity(intent);
                 break;
-            case 2:intent= new Intent(this,Test.class);
+            case 2: //Intent intent= new Intent(this,FormulaeDisplay.class);    // Displays webview directly
+                intent= new Intent(this,topicList.class);
+                intent.putExtra("goal","solved_examples");
+                startActivity(intent);
+                break;
+
+            case 3:intent= new Intent(this,Test.class);
                 intent.putExtra("testmode","Guess");
                 startActivity(intent);
                 break;
-            case 3:intent= new Intent(this,Test.class);
+            case 4:intent= new Intent(this,Test.class);
                 intent.putExtra("testmode","Test");
                 startActivity(intent);
                 break;
@@ -200,8 +208,7 @@ private   android.support.v7.widget.Toolbar toolbar;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent= new Intent(this,Login.class);   // topicList.class for showing list of topics
-            startActivity(intent);
+           startService(new Intent(getBaseContext(),HtmlFetcher.class));
             return true;
         }
         else if(id==R.id.view_questions){

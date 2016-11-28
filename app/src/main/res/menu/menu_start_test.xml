@@ -16,12 +16,20 @@
         android:visible="true"
         app:showAsAction="always"
         />
+    <item android:id="@+id/explanation" android:icon="@drawable/ic_explanation"
+        android:orderInCategory="100"
+        android:title="report"
+        android:visible="true"
+        app:showAsAction="always"
+        />
+
     <item android:id="@+id/nextMenu" android:icon="@drawable/ic_keyboard_arrow_right_white_48dp"
         android:orderInCategory="100"
         android:title="Next"
         android:visible="true"
         app:showAsAction="always"
         />
+
     <item android:id="@+id/doneMenu" android:icon="@drawable/ic_done_white_48dp"
         android:orderInCategory="100"
         android:title="Done"

@@ -1,5 +1,6 @@
 package psl.com.aptitudetest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -92,11 +93,17 @@ public class resultGraph extends ActionBarActivity {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 finish();
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent intent= new Intent(getApplicationContext(),FullScreenAd.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

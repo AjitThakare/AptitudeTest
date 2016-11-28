@@ -27,4 +27,6 @@ dependencies {
     //compile files('libs/chartlib.jar')
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+
 }

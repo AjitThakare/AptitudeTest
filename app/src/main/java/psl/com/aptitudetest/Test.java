@@ -223,7 +223,11 @@ public class Test extends ActionBarActivity implements View.OnClickListener{
                 checkIfalreadyAnswered(userAnswers,currentQuestion);
                 //Log.d(TAG,"currentQuestion["+currentQuestion+"]" + allQuestions.size());
                 break;
-
+            case R.id.explanation:
+                    Intent intent= new Intent(getApplicationContext(),explanation.class);
+                intent.putExtra("qid",allQuestions.get(currentQuestion).getQuestionID());
+                startActivity(intent);
+                    break;
             case R.id.doneMenu:
                     endTest();
                 break;

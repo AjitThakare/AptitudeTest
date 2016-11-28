@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import java.util.Set;
+
 
 public class topicList extends ListActivity {
 public static String TAG=topicList.class.getCanonicalName();
@@ -18,11 +20,22 @@ public static String TAG=topicList.class.getCanonicalName();
     String [] topics;
     ImageButton button;
     Toolbar toolbar;
-
+    String goal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null)
+        {
+            Set set=extras.keySet();
+            if(set.contains("goal"))
+            {
+                goal = extras.getString("goal");
+                 Log.d(TAG,"Goal is "+goal);
+            }
+        }
+
         button = (ImageButton)findViewById(R.id.closeButton);
         toolbar= (Toolbar) findViewById(R.id.tToolbar);
         toolbar.setTitle("Topics");
@@ -40,14 +53,6 @@ public static String TAG=topicList.class.getCanonicalName();
                 finish();
             }
         });
-        Bundle extras=getIntent().getExtras();
-                if(extras!=null)
-                {
-            Log.d(TAG,"data in intent");
-                }
-        else{
-                    Log.d(TAG,"no data in intent");
-                }
 
        // list=(ListView)findViewById(R.id.list);
         topics=getApplicationContext().getResources().getStringArray(R.array.topics);
@@ -65,9 +70,10 @@ public static String TAG=topicList.class.getCanonicalName();
         super.onListItemClick(l, v, position, id);
         String topic= (String) l.getAdapter().getItem(position);
         //Toast.makeText(this,topic,Toast.LENGTH_SHORT).show();
-        Intent intent= new Intent(getApplicationContext(),FormulaeDisplay.class);
-        intent.putExtra("topic",topic); // Show formulae for this Topic
-        startActivity(intent);
+            Intent intent= new Intent(getApplicationContext(),FormulaeDisplay.class);
+            intent.putExtra("topic",topic); // Show formulae for this Topic
+            intent.putExtra("goal",goal);
+            startActivity(intent);
     }
 
     @Override

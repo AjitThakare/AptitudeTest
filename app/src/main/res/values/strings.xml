@@ -38,10 +38,10 @@
     </string-array>
     <string-array name="drawer_menu">
         <item>Formulae</item>
+        <item>Solved Examples</item>
         <item>Guess Mode</item>
         <item>Test Mode</item>
         <item>Rapid Fire</item>
-        <item>Online Test</item>
     </string-array>
 
     <string name="title_activity_result_graph">resultGraph</string>
@@ -55,5 +55,8 @@
     <string name="saved_username">USER</string>
     <string name="spf_file_key">preference</string>
     <string name="logged_in_check">loggedin</string>
+    <string name="title_activity_explanation">explanation</string>
+    <string name="interstitial_ad">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="title_activity_full_screen_ad">FullScreenAd</string>
 
 </resources>

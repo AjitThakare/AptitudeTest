@@ -1,0 +1,14 @@
+question{color:black;}
+answer{color:black;line-height:150%}
+table{color:black}
+
+li{color:#07C}
+.green{color:#5eac1a}
+.gray{color:grey}
+.lgray{color:#ccc}
+.red{color:red}
+.orange{color:#fe7e1f}
+.blue{color:#289fc9}
+
+.cross{background-image:url("file:///android_asset/cross.png");background-repeat:no-repeat;width:150px;height:50px;}
+.cross-data{padding:3px}
